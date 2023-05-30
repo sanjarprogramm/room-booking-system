@@ -1,6 +1,5 @@
 package uz.qbg.appbooking.repository;
 
-import liquibase.pro.packaged.S;
 import org.springframework.data.jpa.repository.JpaRepository;
 import uz.qbg.appbooking.entity.Customer;
 

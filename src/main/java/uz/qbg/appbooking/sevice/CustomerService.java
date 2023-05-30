@@ -1,6 +1,9 @@
 package uz.qbg.appbooking.sevice;
 
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,17 +15,19 @@ import uz.qbg.appbooking.payload.ApiRespons;
 import uz.qbg.appbooking.repository.CustomerRepository;
 
 import java.util.Optional;
-
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
-    @Autowired
-    CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public ApiRespons addCustomer(Customer customer) {
         boolean byPhoneNumber = customerRepository.existsByPhoneNumber(customer.getPhoneNumber());
-        if (byPhoneNumber)
+        if (byPhoneNumber) {
+            log.error("Jadvalda Bu telefon raqamga ega mehmon avvaldan bor, phoneNumber {}", customer.getPhoneNumber());
             return new ApiRespons("Jadvalda Bu telefon raqamga ega mehmon avvaldan bor", false);
+        }
         Customer customer1 = new Customer();
         customer1.setFirstName(customer.getFirstName());
         customer1.setLastName(customer.getLastName());
