@@ -1,5 +1,6 @@
 package uz.qbg.appbooking.sevice;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,17 +19,16 @@ import uz.qbg.appbooking.sevice.client.RoomClientService;
 import java.time.LocalDate;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    @Autowired
-    OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    HotelClientService hotelClientService;
-    @Autowired
-    RoomClientService roomClientService;
+    private final HotelClientService hotelClientService;
 
-    public ApiRespons createOrder(OrderDto orderDto){
+    private final RoomClientService roomClientService;
+
+    public ApiRespons createOrder(OrderDto orderDto) {
         Order order = new Order();
         HotelDTO hotelByID = hotelClientService.getHotelByID(orderDto.getHotelId());
         if (hotelByID != null) {
@@ -46,22 +46,23 @@ public class OrderService {
         order.setFrom(LocalDate.now());
         order.setTo(LocalDate.now().plusDays(5));
         orderRepository.save(order);
-        return new ApiRespons("buyurtma qabul qilindi",true);
+        return new ApiRespons("buyurtma qabul qilindi", true);
     }
 
-    public Page<Order> getAll (int page , int size){
+    public Page<Order> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "id");
-       return orderRepository.findAll(pageable);
+        return orderRepository.findAll(pageable);
     }
 
-    public Order getByOrderID(Integer id){
+    public Order getByOrderID(Integer id) {
         return orderRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("bunday buyurtma ro'yhatda yo'q"));
+                .orElseThrow(() -> new RuntimeException("bunday buyurtma ro'yhatda yo'q"));
 
     }
-    public ApiRespons updateById (OrderDto orderDto){
+
+    public ApiRespons updateById(OrderDto orderDto) {
         if (orderRepository.findById(orderDto.getId()).isPresent())
-            return new ApiRespons("siz qidirgan buyurtma topilmadi",false);
+            return new ApiRespons("siz qidirgan buyurtma topilmadi", false);
         Order order = new Order();
         order.setHotelId(orderDto.getHotelId());
         order.setCustomerId(orderDto.getCustomerId());
@@ -69,14 +70,14 @@ public class OrderService {
         order.setFrom(orderDto.getFrom());
         order.setTo(orderDto.getTo());
         orderRepository.save(order);
-        return new ApiRespons("buyurtma o'zgartirildi",true);
+        return new ApiRespons("buyurtma o'zgartirildi", true);
 
     }
 
     public ApiRespons deleteById(Integer id) {
         if (!orderRepository.findById(id).isPresent())
-            return new ApiRespons("siz qidirgan buyurtma topilmadi",false);
+            return new ApiRespons("siz qidirgan buyurtma topilmadi", false);
         orderRepository.deleteById(id);
-        return new ApiRespons("buyurtma o'chirildi",true);
+        return new ApiRespons("buyurtma o'chirildi", true);
     }
 }
