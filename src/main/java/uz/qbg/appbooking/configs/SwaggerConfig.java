@@ -45,7 +45,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("Booking Management System - REST APIs")
-                .description("").termsOfServiceUrl("")
+                .description("bu apida entityni dto ga dto ni entity ga map qiluvchi mapper yuq ").termsOfServiceUrl("")
                 .contact(new Contact("Sanjarbek Usmanov", "", "sanjar.qodiruli@gmail.com"))
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
